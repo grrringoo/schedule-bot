@@ -12,13 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install python3-pip -y
-          pip3 install -r requirements.txt
-
       - name: Add SSH known hosts
         run: |
           mkdir -p ~/.ssh
@@ -37,4 +30,4 @@ jobs:
         env: 
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
-            ssh ec2-user@${{ secrets.EC2_INSTANCE_IP }} "cd ~/bot && git pull origin main && python3 bot.py"
+            ssh ec2-user@${{ secrets.EC2_INSTANCE_IP }} "cd ~/bot && git pull origin main && pip3 install -r requirements.txt && python3 bot.py"
