@@ -37,4 +37,4 @@ jobs:
         env: 
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
-            ssh ec2-user@${{ secrets.EC2_INSTANCE_IP }} "cd /path/to/bot && git pull origin main && python3 bot.py"
+            ssh ec2-user@${{ secrets.EC2_INSTANCE_IP }} "cd ~/bot && git pull origin main && python3 bot.py"
