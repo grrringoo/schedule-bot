@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: |
@@ -20,7 +20,7 @@ jobs:
           pip3 install -r requirements.txt
 
       - name: SSH into EC2 instance'
-        uses: webfactory/ssh-agent@v0.4.0
+        uses: webfactory/ssh-agent@v0.7.0
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         with:
