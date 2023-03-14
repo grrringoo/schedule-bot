@@ -1,12 +1,11 @@
 import logging
-import os
 
 from aiogram import Bot, Dispatcher, executor, types
 from dotenv import load_dotenv
 
 load_dotenv()
 
-API_TOKEN = os.getenv('BOT_TOKEN')
+API_TOKEN = '5621909170:AAFJEg8Ut2eqtZmsO8te4PBACOeg_bE-jzQ'
 
 logging.basicConfig(level=logging.INFO)
 
