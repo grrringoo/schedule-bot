@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Install dependencies
         run: |
@@ -19,13 +19,18 @@ jobs:
           sudo apt-get install python3-pip -y
           pip3 install -r requirements.txt
 
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          known_hosts: unnecessary
-      - name: Deploy
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+      - name: Add SSH known hosts
         run: |
-          ssh ec2-user@${{ secrets.EC2_INSTANCE_IP }} "cd ~/bot && git pull origin main && python3 bot.py"
+          mkdir -p ~/.ssh
+          ssh-keyscan ${{ secrets.EC2_INSTANCE_IP }} >> ~/.ssh/known_hosts
+      - name: SSH into EC2 instance
+        uses: webfactory/ssh-agent@v0.4.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          ssh-config: |
+            Host *
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
+      - name: Deploy
+        run: |
+            ssh ec2-user@${{ secrets.EC2_INSTANCE_IP }} "cd /path/to/bot && git pull origin main && python3 bot.py"
