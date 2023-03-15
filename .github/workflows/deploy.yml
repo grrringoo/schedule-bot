@@ -18,16 +18,8 @@ jobs:
           ssh-keyscan ${{ secrets.EC2_INSTANCE_IP }} >> ~/.ssh/known_hosts
       - name: SSH into EC2 instance
         uses: webfactory/ssh-agent@v0.4.0
-        env: 
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          ssh-config: |
-            Host *
-            StrictHostKeyChecking no
-            UserKnownHostsFile /dev/null
       - name: Deploy
-        env: 
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
             ssh ec2-user@${{ secrets.EC2_INSTANCE_IP }} "cd ~/bot && git pull origin main && pip3 install -r requirements.txt && python3 bot.py &"
