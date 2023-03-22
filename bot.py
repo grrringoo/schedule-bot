@@ -1,24 +1,22 @@
+from aiogram import executor
 import logging
-import os
-
-from aiogram import Bot, Dispatcher, executor
-from dotenv import load_dotenv
 
 from handlers import setup
-
-load_dotenv()
-
-API_TOKEN = os.getenv('BOT_TOKEN')
-
-logging.basicConfig(level=logging.INFO)
-
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+from loader import dp, ADMINS
 
 
-def on_startup():
+async def on_startup(dp):
     setup(dp)
+    await notify_admins()
+
+
+async def notify_admins():
+    for admin in ADMINS:
+        try:
+            await dp.bot.send_message(admin, 'Бота запущено.')
+        except Exception as e:
+            logging.exception(e)
 
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True, on_startup=on_startup())
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)

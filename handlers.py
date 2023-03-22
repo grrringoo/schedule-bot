@@ -1,9 +1,8 @@
 from aiogram import types, Dispatcher
-from aiogram.dispatcher.filters import CommandStart, CommandHelp, CommandSettings
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 
-from bot import bot
+from loader import bot
 
 
 class FSMStates(StatesGroup):
@@ -32,8 +31,8 @@ async def help_handler(msg: types.Message):
     await bot.send_message(msg.chat.id, text)
 
 
-async def settings_handler(msg: types.Message):
-    await FSMStates.set_value.set()
+async def settings_handler(msg: types.Message, state: FSMContext):
+    await state.set_state(FSMStates.set_value)
     text = 'Вкажи час, за який тебе треба попереджувати про початок пари у хвилинах.'
     await bot.send_message(msg.chat.id, text)
 
@@ -48,7 +47,7 @@ async def set_time_value(msg: types.Message, state: FSMContext):
 
 
 def setup(dp: Dispatcher):
-    dp.register_message_handler(start_handler, CommandStart)
-    dp.register_message_handler(help_handler, CommandHelp)
-    dp.register_message_handler(settings_handler, CommandSettings)
-    dp.message_handler(set_time_value, state=FSMStates.set_value)
+    dp.register_message_handler(start_handler, commands=['start'])
+    dp.register_message_handler(help_handler, commands=['help'])
+    dp.register_message_handler(settings_handler, commands=['settings'])
+    dp.register_message_handler(set_time_value, state=FSMStates.set_value)
