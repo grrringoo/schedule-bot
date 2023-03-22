@@ -1,27 +1,22 @@
+from aiogram import executor
 import logging
-import os
 
-from aiogram import Bot, Dispatcher, executor, types
-from dotenv import load_dotenv
-
-load_dotenv()
-
-API_TOKEN = os.getenv('BOT_TOKEN')
-
-logging.basicConfig(level=logging.INFO)
-
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
+from handlers import setup
+from loader import dp, ADMINS
 
 
-@dp.message_handler(commands=['start', 'help'])
-async def send_welcome(message: types.Message):
-    await message.reply("Hi!\nI'm EchoBot!\nPowered by aiogram.")
+async def on_startup(dp):
+    setup(dp)
+    await notify_admins()
 
 
-@dp.message_handler()
-async def echo(message: types.Message):
-    await message.answer(message.text)
+async def notify_admins():
+    for admin in ADMINS:
+        try:
+            await dp.bot.send_message(admin, 'Бота запущено.')
+        except Exception as e:
+            logging.exception(e)
+
 
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
