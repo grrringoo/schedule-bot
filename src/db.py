@@ -45,5 +45,12 @@ class User(BaseModel):
         user.notification_time = notification_time
         user.save()
 
+class Class(BaseModel):
+    id = IntegerField(primary_key=True)
+    title = CharField()
+    starts_at = TimeField()
+    teacher_name = CharField()
+    google_meet_link = CharField()
 
-db.create_tables([User])
+
+db.create_tables([User, Class])
