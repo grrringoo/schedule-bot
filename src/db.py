@@ -24,26 +24,29 @@ class BaseModel(Model):
 
 class User(BaseModel):
     id = IntegerField(primary_key=True)
-    chat_id = IntegerField()
     notification_time = IntegerField()
 
+    @staticmethod
     def get_all():
         return User.select()
 
-    def get_by_id(id):
-        return User.get(User.id == id)
+    @staticmethod
+    def get_by_id(user_id):
+        return User.get(User.id == user_id)
 
-    def create_user(id, chat_id, notification_time):
+    @staticmethod
+    def create_user(user_id, notification_time):
         User.create(
-            id=id,
-            chat_id=chat_id,
+            id=user_id,
             notification_time=notification_time
         )
 
-    def update_notification_time(id, notification_time):
-        user = User.get(User.id == id)
+    @staticmethod
+    def update_notification_time(user_id, notification_time):
+        user = User.get(User.id == user_id)
         user.notification_time = notification_time
         user.save()
+
 
 class Class(BaseModel):
     id = IntegerField(primary_key=True)
