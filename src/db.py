@@ -22,28 +22,28 @@ class BaseModel(Model):
         database = db
 
 
-class User(BaseModel):
+class Student(BaseModel):
     id = IntegerField(primary_key=True)
     notification_time = IntegerField()
 
     @staticmethod
     def get_all():
-        return User.select()
+        return Student.select()
 
     @staticmethod
     def get_by_id(user_id):
-        return User.get(User.id == user_id)
+        return Student.get(Student.id == user_id)
 
     @staticmethod
     def create_user(user_id, notification_time):
-        User.create(
+        Student.create(
             id=user_id,
             notification_time=notification_time
         )
 
     @staticmethod
     def update_notification_time(user_id, notification_time):
-        user = User.get(User.id == user_id)
+        user = Student.get(Student.id == user_id)
         user.notification_time = notification_time
         user.save()
 
@@ -56,4 +56,4 @@ class Class(BaseModel):
     google_meet_link = CharField()
 
 
-db.create_tables([User, Class])
+db.create_tables([Student, Class])
